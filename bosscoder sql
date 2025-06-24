@@ -1,0 +1,200 @@
+#DAY 1
+
+1.
+select c.customer_id, c.customer_name, sum(o.order_amount) as total_order_amount
+from Customers c
+join Orders o
+on c.customer_id = o.customer_id
+group by c.customer_id, c.customer_name
+order by total_order_amount DESC
+limit 5;
+
+2.
+select distinct c.customer_name
+from Customers c
+inner join Orders o
+on c.customer_id = o.customer_id
+where o.order_date >= CURRENT_DATE - INTERVAL '30 days';
+
+3.
+select p.product_id, p.product_name, count(distinct oi.order_id) as order_count
+from Product p
+inner join Orders_Items oi
+on p.product_id = oi.product_id
+group by p.product_id, p.product_name
+having count(distinct oi.order_id) >= 3;
+
+4.
+SELECT od.order_id, od.product_id, od.quantity, o.order_date, c.customer_id, c.customer_name
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Details od
+ON o.order_id = od.order_id
+WHERE c.city = 'CityName';
+
+5.
+SELECT distinct c.customer_id, c.customer_name
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Details od
+ON o.order_id = od.order_id
+JOIN Products p
+ON o.product_id = od.product_id
+where p.price > 100;
+
+6.
+select c.customer_id, c.customer_name, avg(o.order_amount) as average_order_amount
+from Customers c
+inner join Orders o
+on c.customer_id = o.customer_id
+group by c.customer_id, c.customer_name;
+
+7.
+select p.product_id, p.product_name
+from Product p
+left join Orders_Items oi
+on p.product_id = oi.product_id
+where oi.product_id is NULL;
+
+8.
+select distinct c.customer_name
+from Customers c
+inner join Orders o
+on c.customer_id = o.customer_id
+where dayofweek(o.order_date) in (1,7); -- 1=Sunday, 7=Saturday
+
+9.
+select date_format(order_date, '%Y-%m') as Month, sum(order_amount) as total_order_amount
+from Orders
+group by date_format(order_date, '%Y-%m')
+order by Month;
+
+10.
+SELECT c.customer_id, c.customer_name, COUNT(DISTINCT oi.product_id) AS distinct_product_count
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Items oi
+ON o.order_id = oi.order_id
+GROUP BY c.customer_id, c.customer_name
+HAVING COUNT(DISTINCT oi.product_id) > 2;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+#DAY 2
+
+1.
+SELECT od.order_id, od.product_id, od.quantity, o.order_date, c.customer_name, p.product_name
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Details od
+ON o.order_id = od.order_id
+JOIN Products p
+ON p.product_id = od.product_id
+group by od.order_id;
+
+2.
+select p.product_id, p.product_name, s.supplier_name
+from Products p
+join Suppliers s
+on p.supplier_id = s.supplier_id
+group by p.product_id;
+
+3.
+select c.customer_id, c.customer_name
+from Customers c
+left join Orders o
+ON c.customer_id = o.customer_id
+where o.customer_id is NULL;
+
+4.
+SELECT c.customer_id, c.customer_name, oi.quantity
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Items oi
+ON o.order_id = oi.order_id
+group by c.customer_id, c.customer_name;
+
+5.
+SELECT p.product_id, p.product_name
+FROM Products p
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Details od
+ON o.order_id = od.order_id
+WHERE c.city = 'CityName';
+
+6.
+SELECT c.customer_id, c.customer_name, COALESCE(sum(o.order_amount),0) as total_order_amount
+FROM Customers c
+LEFT JOIN Orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name;
+
+7.
+SELECT oi.order_id, oi.product_id, oi.quantity, o.order_date, c.customer_id, c.customer_name
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Items oi
+ON o.order_id = oi.order_id
+WHERE c.occupation = 'Occupation';
+
+8.
+SELECT distinct c.customer_id, c.customer_name
+FROM Customers c
+JOIN Orders o
+ON c.customer_id = o.customer_id
+JOIN Order_Items oi
+ON o.order_id = oi.order_id
+JOIN Products p
+ON o.product_id = od.product_id
+where p.price > (select avg(p.price) from Products);
+
+9.
+SELECT c.customer_id, c.customer_name, count(o.order_id) as total_orders
+FROM Customers c
+LEFT JOIN Orders o
+ON c.customer_id = o.customer_id
+group by c.customer_id, c.customer_name;
+
+10.
+select p.product_id, p.product_name, COALESCE(sum(oi.quantity),0) as total_quantity_ordered
+from Products p
+left join Orders_Items oi
+on p.product_id = oi.product_id
+group by p.product_id, p.product_name;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+#DAY 3
+
+1.
+SELECT customer_id, customer_name
+FROM Customers
+WHERE customer_name like 'A%n';
+
+2.
+select product_id, product_name
+from Products
+where product_name REGEXP '[0-9]';
+
+3.
+select employee_id, employee_name, salary
+from Employees
+group by employee_id, employee_name, salary
+order by salary is null, salary asc;
+
+4.
+SELECT customer_id, customer_name
+FROM Customers
+WHERE length(customer_name) = 5;
+
+5.
+SELECT product_id, product_name
+FROM Products
+WHERE product_name like 'S%e';
+
+6.
